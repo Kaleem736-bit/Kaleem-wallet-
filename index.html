@@ -1,0 +1,147 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محفظة TRX المتكاملة</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- صفحات النظام -->
+    <div class="container page" id="loginPage">
+        <div class="card">
+            <h2>تسجيل الدخول</h2>
+            <input type="text" class="input-field" placeholder="البريد الإلكتروني أو رقم الهاتف أو اسم المستخدم" id="loginId">
+            <input type="password" class="input-field" placeholder="كلمة المرور" id="loginPassword">
+            <button class="btn btn-primary" onclick="login()">تسجيل الدخول</button>
+            <p onclick="showPage('registerPage')">إنشاء حساب جديد</p>
+        </div>
+    </div>
+
+    <div class="container page" id="registerPage">
+        <div class="card">
+            <h2>إنشاء حساب جديد</h2>
+            <input type="text" class="input-field" placeholder="الاسم الرباعي" id="fullName">
+            <input type="email" class="input-field" placeholder="البريد الإلكتروني" id="email">
+            <input type="tel" class="input-field" placeholder="رقم الهاتف" id="phone">
+            <input type="password" class="input-field" placeholder="كلمة المرور" id="password">
+            <input type="password" class="input-field" placeholder="تأكيد كلمة المرور" id="confirmPassword">
+            <button class="btn btn-primary" onclick="register()">إنشاء حساب</button>
+            <p onclick="showPage('loginPage')">لديك حساب؟ تسجيل الدخول</p>
+        </div>
+    </div>
+
+    <div class="container page" id="walletPage">
+        <div class="card">
+            <h3 id="userName"></h3>
+            <p id="walletAddress"></p>
+            <h2 id="balanceTRX"></h2>
+            <p id="balanceUSD"></p>
+
+            <div class="stats-container">
+                <div class="stat-item"><small>الطاقة</small><h3 id="energyValue"></h3></div>
+                <div class="stat-item"><small>النطاق</small><h3 id="bandwidthValue"></h3></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="showPage('sendPage')">إرسال</button>
+                <button class="btn btn-success" onclick="showPage('receivePage')">استلام</button>
+                <button class="btn btn-primary" onclick="showPage('votePage')">تصويت</button>
+                <button class="btn btn-success" onclick="stakeFunds()">Stake</button>
+            </div>
+
+            <h4>الأصول</h4>
+            <div class="asset-list" id="assetsList"></div>
+        </div>
+    </div>
+
+    <div class="container page" id="sendPage">
+        <div class="card">
+            <h2>إرسال أموال</h2>
+            <select class="input-field" id="sendCurrency"></select>
+            <input type="text" class="input-field" placeholder="عنوان المحفظة المستقبلة" id="receiverAddress">
+            <input type="number" class="input-field" placeholder="المبلغ" id="sendAmount">
+            <button class="btn btn-primary" onclick="sendFunds()">إرسال الآن</button>
+            <p onclick="showPage('walletPage')">رجوع</p>
+        </div>
+    </div>
+
+    <div class="container page" id="receivePage">
+        <div class="card">
+            <h2>استلام أموال</h2>
+            <p id="receiveAddress"></p>
+            <div class="qr-box"><i class="fas fa-qrcode"></i></div>
+            <p>استخدم هذا العنوان للاستلام</p>
+            <p onclick="showPage('walletPage')">رجوع</p>
+        </div>
+    </div>
+
+    <div class="container page" id="transactionsPage">
+        <div class="card">
+            <h2>سجل المعاملات</h2>
+            <div class="filter-buttons">
+                <button class="btn btn-primary" onclick="filterTransactions('all')">الكل</button>
+                <button class="btn btn-success" onclick="filterTransactions('received')">الواردة</button>
+                <button class="btn btn-danger" onclick="filterTransactions('sent')">الصادرة</button>
+            </div>
+            <div id="transactionsContainer"></div>
+            <p onclick="showPage('walletPage')">رجوع</p>
+        </div>
+    </div>
+
+    <div class="container page" id="profilePage">
+        <div class="card">
+            <h2>الملف الشخصي</h2>
+            <div class="profile-header">
+                <div class="avatar"></div>
+                <h3 id="profileName"></h3>
+            </div>
+            <div class="input-field" id="profileEmail"></div>
+            <div class="input-field" id="profilePhone"></div>
+            <div class="input-field" id="profileWallet"></div>
+            <div class="stats-container">
+                <div class="stat-item"><small>إجمالي الإرسال</small><h3 id="totalSent"></h3></div>
+                <div class="stat-item"><small>إجمالي الاستلام</small><h3 id="totalReceived"></h3></div>
+            </div>
+            <button class="btn btn-danger" onclick="logout()">تسجيل الخروج</button>
+            <p onclick="showPage('walletPage')">رجوع</p>
+        </div>
+    </div>
+
+    <div class="container page" id="votePage">
+        <div class="card">
+            <h2>نظام التصويت</h2>
+            <div class="asset-list" id="candidatesList"></div>
+            <p onclick="showPage('walletPage')">رجوع</p>
+        </div>
+    </div>
+
+    <div class="container page" id="adminPage">
+        <div class="card">
+            <h2>صفحة المراقب</h2>
+            <div id="adminSection">
+                <h3>المستخدمون</h3>
+                <div id="adminUsers"></div>
+                <h3>المعاملات</h3>
+                <div id="adminTransactions"></div>
+                <h3>تحويل من المراقب</h3>
+                <select id="adminCurrency"></select>
+                <input type="text" class="input-field" placeholder="عنوان المستخدم" id="adminReceiver">
+                <input type="number" class="input-field" placeholder="المبلغ" id="adminAmount">
+                <button class="btn btn-primary" onclick="adminSend()">تحويل</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="tab-item active" onclick="showPage('walletPage')"><i class="fas fa-home"></i></div>
+        <div class="tab-item" onclick="showPage('transactionsPage')"><i class="fas fa-exchange-alt"></i></div>
+        <div class="tab-item" onclick="showPage('votePage')"><i class="fas fa-vote-yea"></i></div>
+        <div class="tab-item" onclick="showPage('profilePage')"><i class="fas fa-user"></i></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
